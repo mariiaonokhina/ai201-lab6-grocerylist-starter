@@ -27,13 +27,14 @@ def purchase_all_items(list_id: str, user_id: str) -> int:
     Returns:
         The number of items marked as purchased.
     """
-    items = Item.query.filter_by(list_id=list_id).all()
+    items = Item.query.filter_by(list_id=list_id).all()  # Returns ALL items (even if purchased)
     for item in items:
         item.is_purchased = True
-        item.purchased_by = user_id
+        # If item was already purchased, the user id of the person who purchased would be overwritten
+        item.purchased_by = user_id  
         item.purchased_at = datetime.now(timezone.utc)
     db.session.commit()
-    return len(items)
+    return len(items)  # ALL ITEMS are counted, even if they were already purchased
 
 
 # ---------------------------------------------------------------------------
@@ -49,7 +50,8 @@ def purchase_all(list_id):
         user_id (str, required) — the user doing the shopping
     """
     data = request.get_json() or {}
-    user_id = data.get("user_id")
+    # If the user omits the user_id, it will be None, and the service will still mark all items as purchased
+    user_id = data.get("user_id")  
 
     count = list_service.purchase_all_items(list_id, user_id)
     return jsonify({"purchased": count}), 200
