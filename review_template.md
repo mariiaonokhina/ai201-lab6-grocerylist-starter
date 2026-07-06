@@ -57,21 +57,21 @@ if not user_id:
 ### Summary
 *What does this PR do? (1–2 sentences in your own words)*
 
->
+>It attempts to return the list statistics, including total item count, purchased count, remaining count, and a breakdown of item counts by category.
 
 ### Issues
 
 **Issue 1**
-- Location:
-- What's wrong:
-- Why it matters:
-- Suggested fix:
+- Location: Lines 35, 41 - 45
+- What's wrong: The code is getting categories for all items and not just unpurchased.
+- Why it matters: The user will see the counts of all items in all categories and not just remaining items, which will result in buying things they don't need. 
+- Suggested fix: Create a separate list for unpurchased items and loop through that instead.
 
 **Issue 2**
-- Location:
-- What's wrong:
-- Why it matters:
-- Suggested fix:
+- Location: `list_stats()` function
+- What's wrong: The endpoint still returns stats even if list ID doesn't exist and it is None.
+- Why it matters: This might lead to a false conclusion that the list being queried in fact exists.
+- Suggested fix: Return an error if the list doesn't exist.
 
 **Issue 3** *(if found)*
 - Location:
@@ -86,12 +86,12 @@ if not user_id:
 
 ### Verdict
 - [ ] Approve — ship it
-- [ ] Request Changes — needs fixes before merging
+- [X] Request Changes — needs fixes before merging
 - [ ] Comment — needs discussion before a verdict
 
 **Rationale** *(1–2 sentences)*:
 
->
+>There are a couple of bugs which might affect user experience. It's better to fix them before merging.
 
 ---
 
@@ -101,12 +101,12 @@ if not user_id:
 
 **1.** Which issue was hardest to spot, and why?
 
->
+>To me, PR #2 issues were harder because it's more complicated and the issues are less obvious. For example, it was hard to spot that PR #2 was semantically wrong vs. obvious mistakes in code,
 
 **2.** Which issues do you think an LLM reviewer (like Claude reviewing its own code) would most likely miss? Why?
 
->
+>An LLM reviewer would likely miss issues that involve business intent or semantic correctness, especially when the code is technically valid but still does the wrong thing for the user. It may also miss edge cases around missing data, invalid states, or misleading output that are not obvious from the code structure alone.
 
 **3.** One thing you'd add to a code review checklist for AI-generated backend code:
 
->
+>Check whether the implementation matches the intended user-facing behavior, not just whether the code runs without errors.

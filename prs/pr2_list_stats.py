@@ -36,9 +36,10 @@ def get_list_stats(list_id: str) -> dict:
 
     total = len(items)
     purchased = sum(1 for item in items if item.is_purchased)
-    remaining = total - purchased
+    remaining = total - purchased  # 
 
     by_category = {}
+    # Loops over ALL items, not just unpurchased
     for item in items:
         cat = item.category or "uncategorized"
         by_category[cat] = by_category.get(cat, 0) + 1
@@ -59,5 +60,5 @@ def get_list_stats(list_id: str) -> dict:
 @lists_bp.route("/<list_id>/stats", methods=["GET"])
 def list_stats(list_id):
     """Return summary statistics for a grocery list."""
-    stats = list_service.get_list_stats(list_id)
+    stats = list_service.get_list_stats(list_id)  # Still returns stats even if list is None
     return jsonify(stats), 200
